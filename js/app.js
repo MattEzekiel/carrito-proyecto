@@ -3,7 +3,7 @@ const carrito = document.querySelector('#carrito'),
      listaCursos = document.querySelector('#lista-cursos'),
      contenedorCarrito = document.querySelector('#lista-carrito tbody'),
      vaciarCarrito = document.querySelector('#vaciar-carrito');
-let articulosCarrito = [];
+let articulosCarrito = localStorage.getItem('carrito') ? JSON.parse(localStorage.getItem('carrito')) : [];
 
 /**
  * Ejecuta cuando se cargue el DOM
@@ -21,8 +21,13 @@ function cargarEventListeners() {
     carrito.addEventListener('click',eliminarCurso);
     vaciarCarrito.addEventListener('click', () => {
         articulosCarrito = [];
+        localStorage.setItem('carrito',JSON.stringify(articulosCarrito));
         limpiarHTMLCarrito();
     });
+
+    if (articulosCarrito.length !== 0){
+        carritoHTML();
+    }
 }
 
 //funciones
@@ -50,6 +55,7 @@ function eliminarCurso(e) {
 
         //Elimina del arreglo por el data-id
         articulosCarrito = articulosCarrito.filter( curso => curso.id !== cursoId );
+        localStorage.setItem('carrito',JSON.stringify(articulosCarrito));
 
         carritoHTML(); //Vuelve a iterar sobre el archivo y crear el html
     }
@@ -82,9 +88,11 @@ function leerDatosCursos(curso) {
            }
         });
         articulosCarrito = [...cursos];
+        localStorage.setItem('carrito',JSON.stringify(articulosCarrito));
     } else {
         //Agrega elementos al arreglo de carrito
         articulosCarrito = [...articulosCarrito, infoCurso];
+        localStorage.setItem('carrito',JSON.stringify(articulosCarrito));
     }
 
     carritoHTML();
